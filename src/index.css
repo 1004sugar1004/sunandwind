@@ -58,6 +58,21 @@
   letter-spacing: 0.3px;
 }
 
+/* CurvedLoop title wrapper */
+.intro-title-wrap {
+  width: min(700px, 95vw);
+  margin: 0 auto;
+  filter:
+    drop-shadow(0 0 40px rgba(180, 150, 255, 0.35))
+    drop-shadow(0 2px 20px rgba(0, 0, 0, 0.5));
+}
+
+.intro-curved-text {
+  fill: #ffffff !important;
+  text-shadow: none;
+}
+
+/* keep old class for fallback */
 .intro-title {
   font-size: clamp(36px, 8vw, 68px);
   font-weight: 900;
