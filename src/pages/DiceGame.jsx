@@ -144,9 +144,15 @@ export default function DiceGame({ onNavigate }) {
     if (data.item === 'wind') {
       const pItems = newPlayers[currentTurn].items;
       if (pItems.length > 0) {
-        const idx = Math.floor(Math.random() * pItems.length);
-        const removed = pItems[idx];
-        newPlayers[currentTurn].items.splice(idx, 1);
+        let removed;
+        if (pItems.includes('coat')) {
+          removed = 'coat';
+          pItems.splice(pItems.indexOf('coat'), 1);
+        } else {
+          const idx = Math.floor(Math.random() * pItems.length);
+          removed = pItems[idx];
+          pItems.splice(idx, 1);
+        }
         action = { type: 'wind', item: removed, sentence: data.sentence };
         setWindTarget(currentTurn);
       } else {
@@ -158,6 +164,8 @@ export default function DiceGame({ onNavigate }) {
       const pItems = newPlayers[currentTurn].items;
       if (pItems.includes(item)) {
         action = { type: 'pass', item, sentence: data.sentence };
+      } else if (item === 'coat' && !pItems.includes('sweater')) {
+        action = { type: 'pass_req', item, sentence: data.sentence };
       } else {
         pItems.push(item);
         action = { type: 'add', item, sentence: data.sentence };
@@ -170,7 +178,7 @@ export default function DiceGame({ onNavigate }) {
     setPlayers(newPlayers);
     setTotalRolls(nextTotalRolls);
 
-    const isEndRound = nextTotalRolls >= 30 && nextTotalRolls % 2 === 0;
+    const isEndRound = nextTotalRolls >= 20 && nextTotalRolls % 2 === 0;
     const p1Score = newPlayers[0].items.length;
     const p2Score = newPlayers[1].items.length;
 
@@ -250,11 +258,12 @@ export default function DiceGame({ onNavigate }) {
       </div>
 
       {lastAction && (
-        <div className={`action-banner ${lastAction.type}`}>
+        <div className={`action-banner ${lastAction.type === 'pass_req' ? 'pass' : lastAction.type}`}>
           {lastAction.type === 'wind' && <>💨 바람이 불었어요! <strong>{ITEM_LABELS[lastAction.item]}</strong>이(가) 날아갔어요!</>}
           {lastAction.type === 'wind_empty' && <>💨 바람이 불었어요! 하지만 날아갈 아이템이 없어요.</>}
           {lastAction.type === 'add' && <>✅ <strong>{lastAction.sentence}</strong></>}
           {lastAction.type === 'pass' && <>➡️ 이미 있어요! <strong>PASS!</strong></>}
+          {lastAction.type === 'pass_req' && <>➡️ 스웨터를 먼저 입어야 코트를 입을 수 있어요! <strong>PASS!</strong></>}
         </div>
       )}
 
@@ -282,13 +291,22 @@ export default function DiceGame({ onNavigate }) {
       </div>
 
       <div className="dice-area">
-        <DiceRoller onRoll={handleRoll} disabled={waiting} />
+        {(() => {
+          const pItems = players[currentTurn].items;
+          const neededFaces = DICE_DATA.filter(d => {
+            if (d.item === 'wind') return false;
+            if (pItems.includes(d.item)) return false;
+            if (d.item === 'coat' && !pItems.includes('sweater')) return false;
+            return true;
+          }).map(d => d.face);
+          return <DiceRoller onRoll={handleRoll} disabled={waiting} neededFaces={neededFaces} />;
+        })()}
       </div>
 
       <div className="rules-hint">
-        <span>💡 주사위 6: <strong>바람이 불어 아이템이 날아가요!</strong></span>
-        <span> · 이미 있는 아이템: <strong>PASS!</strong></span>
-        <span> · 5개 먼저 모으면 승리! (진행: {totalRolls >= 30 ? '연장전' : `${Math.floor(totalRolls / 2) + 1}턴/15턴`})</span>
+        <span>💡 주사위 6: <strong>바람이 불면 외투(코트)부터 날아가요!</strong></span>
+        <span> · <strong>외투는 스웨터 위에만 입을 수 있어요.</strong></span>
+        <span> · 5개 먼저 모으면 승리! (진행: {totalRolls >= 20 ? '연장전 진행 중' : `${Math.floor(totalRolls / 2) + 1}턴/10턴`})</span>
       </div>
     </div>
   );

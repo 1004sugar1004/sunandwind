@@ -9,7 +9,7 @@ const PIPS = {
   6: [[30, 22], [70, 22], [30, 50], [70, 50], [30, 78], [70, 78]],
 };
 
-export default function DiceRoller({ onRoll, disabled }) {
+export default function DiceRoller({ onRoll, disabled, neededFaces = [] }) {
   const [face, setFace] = useState(null);
   const [rolling, setRolling] = useState(false);
   const intervalRef = useRef(null);
@@ -31,7 +31,12 @@ export default function DiceRoller({ onRoll, disabled }) {
       ticks++;
       if (ticks >= total) {
         clearInterval(intervalRef.current);
-        const result = Math.floor(Math.random() * 6) + 1;
+        let result;
+        if (neededFaces.length > 0 && Math.random() < 0.75) {
+          result = neededFaces[Math.floor(Math.random() * neededFaces.length)];
+        } else {
+          result = Math.floor(Math.random() * 6) + 1;
+        }
         setFace(result);
         setRolling(false);
         onRoll(result);
