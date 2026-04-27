@@ -32,7 +32,7 @@ export default function DiceRoller({ onRoll, disabled, neededFaces = [] }) {
       if (ticks >= total) {
         clearInterval(intervalRef.current);
         let result;
-        if (neededFaces.length > 0 && Math.random() < 0.75) {
+        if (neededFaces.length > 0 && Math.random() < 0.95) {
           result = neededFaces[Math.floor(Math.random() * neededFaces.length)];
         } else {
           result = Math.floor(Math.random() * 6) + 1;
