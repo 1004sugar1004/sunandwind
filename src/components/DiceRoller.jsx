@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 const PIPS = {
   1: [[50, 50]],
@@ -13,6 +13,12 @@ export default function DiceRoller({ onRoll, disabled }) {
   const [face, setFace] = useState(null);
   const [rolling, setRolling] = useState(false);
   const intervalRef = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, []);
 
   const roll = () => {
     if (rolling || disabled) return;
