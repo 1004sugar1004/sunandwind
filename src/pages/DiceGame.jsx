@@ -120,6 +120,7 @@ function ItemChecklist({ items }) {
 export default function DiceGame({ onNavigate }) {
   const [phase, setPhase] = useState('rps');
   const [currentTurn, setCurrentTurn] = useState(0);
+  const [totalRolls, setTotalRolls] = useState(0);
   const [players, setPlayers] = useState([
     { name: 'Player 1', items: [] },
     { name: 'Player 2', items: [] },
@@ -134,6 +135,7 @@ export default function DiceGame({ onNavigate }) {
     speak(data.sentence);
     setWaiting(true);
 
+    const nextTotalRolls = totalRolls + 1;
     const newPlayers = players.map(p => ({ ...p, items: [...p.items] }));
     let action;
     let isWin = false;
@@ -166,9 +168,17 @@ export default function DiceGame({ onNavigate }) {
 
     setLastAction(action);
     setPlayers(newPlayers);
+    setTotalRolls(nextTotalRolls);
+
+    const isEndRound = nextTotalRolls >= 30 && nextTotalRolls % 2 === 0;
+    const p1Score = newPlayers[0].items.length;
+    const p2Score = newPlayers[1].items.length;
 
     if (isWin) {
       setWinner(currentTurn);
+      setTimeout(() => { setPhase('finished'); setWaiting(false); }, 2500);
+    } else if (isEndRound && p1Score !== p2Score) {
+      setWinner(p1Score > p2Score ? 0 : 1);
       setTimeout(() => { setPhase('finished'); setWaiting(false); }, 2500);
     } else {
       setTimeout(() => {
@@ -178,11 +188,12 @@ export default function DiceGame({ onNavigate }) {
         setWaiting(false);
       }, 2500);
     }
-  }, [players, currentTurn]);
+  }, [players, currentTurn, totalRolls]);
 
   const resetGame = () => {
     setPhase('rps');
     setCurrentTurn(0);
+    setTotalRolls(0);
     setPlayers([{ name: 'Player 1', items: [] }, { name: 'Player 2', items: [] }]);
     setLastAction(null);
     setWindTarget(null);
@@ -208,7 +219,7 @@ export default function DiceGame({ onNavigate }) {
       </div>
       <div className="finished-screen">
         <div className="winner-banner">
-          🎉 {players[winner].name} 승리! 🎉
+          🎉 {players[winner].name} 승리! {players[winner].items.length < 5 ? '(판정승)' : ''} 🎉
         </div>
         <div className="finish-figures">
           {players.map((p, i) => (
@@ -277,7 +288,7 @@ export default function DiceGame({ onNavigate }) {
       <div className="rules-hint">
         <span>💡 주사위 6: <strong>바람이 불어 아이템이 날아가요!</strong></span>
         <span> · 이미 있는 아이템: <strong>PASS!</strong></span>
-        <span> · 5개 먼저 모으면 승리!</span>
+        <span> · 5개 먼저 모으면 승리! (진행: {totalRolls >= 30 ? '연장전' : `${Math.floor(totalRolls / 2) + 1}턴/15턴`})</span>
       </div>
     </div>
   );
