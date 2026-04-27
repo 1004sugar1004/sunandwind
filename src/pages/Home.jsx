@@ -4,7 +4,6 @@ export default function Home({ onNavigate }) {
       <div className="home-hero">
         <div className="sun-icon">☀️</div>
         <h1>The North Wind<br />and the Sun</h1>
-        <p className="home-subtitle">천재(함) 6학년 6단원 · 외모와 옷차림 묘사하기</p>
       </div>
 
       <div className="home-cards">
