@@ -57,7 +57,7 @@ export default function CharacterFigure({ items = [], size = 180, windEffect = f
                 height: '100%',
                 objectFit: 'contain',
                 objectPosition: 'center bottom',
-                mixBlendMode: 'multiply',
+                mixBlendMode: item === 'jeans' ? 'normal' : 'multiply',
                 transition: 'opacity 0.35s ease',
               }}
             />
