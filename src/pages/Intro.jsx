@@ -27,10 +27,7 @@ export default function Intro({ onStart }) {
       {/* Content */}
       <div className={`intro-content ${visible ? 'intro-visible' : ''}`}>
 
-        <div className="intro-badge">
-          <span>☀️</span>
-          <span>천재(함) 6학년 6단원</span>
-        </div>
+
 
         {/* CurvedLoop title */}
         <div className="intro-title-wrap">

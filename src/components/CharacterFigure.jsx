@@ -44,40 +44,25 @@ export default function CharacterFigure({ items = [], size = 180, windEffect = f
         />
 
         {/* Clothing layers */}
-        {LAYERS.map((item) => {
-          if (!items.includes(item)) return null;
-
-          // 기본 스타일 (기존 전체 덮기)
-          const baseStyle = {
-            position: 'absolute',
-            inset: 0,
-            width: '100%',
-            height: '100%',
-            objectFit: 'contain',
-            objectPosition: 'center bottom',
-            mixBlendMode: 'multiply',
-            transition: 'opacity 0.35s ease',
-          };
-
-          // 청바지(jeans) 전용 위치/크기 조정
-          const overrideStyle = item === 'jeans' ? {
-            inset: 'auto',
-            top: '52.4%',       // 허리선 (716px)
-            left: '0',
-            width: '100%',
-            height: '40.4%',    // 허리~발목 길이 (552px)
-            objectPosition: 'center top', // 이미지의 위쪽을 허리선에 맞춤
-          } : {};
-
-          return (
+        {LAYERS.map((item) =>
+          items.includes(item) ? (
             <img
               key={item}
               src={`/images/char_${item}.png`}
               alt={item}
-              style={{ ...baseStyle, ...overrideStyle }}
+              style={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'contain',
+                objectPosition: 'center bottom',
+                mixBlendMode: 'multiply',
+                transition: 'opacity 0.35s ease',
+              }}
             />
-          );
-        })}
+          ) : null
+        )}
       </div>
     </div>
   );
