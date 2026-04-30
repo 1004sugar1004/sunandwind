@@ -303,6 +303,33 @@ export default function DiceGame({ onNavigate }) {
         })()}
       </div>
 
+      {/* 주사위 문장 가이드 */}
+      <div className="dice-guide">
+        <div className="dice-guide-title">🎲 주사위 가이드</div>
+        <div className="dice-guide-rows">
+          {DICE_DATA.map(({ face, item, sentence }) => (
+            <div key={face} className={`dice-guide-row ${item === 'wind' ? 'wind-row' : ''}`}>
+              <span className="dice-guide-face">
+                <svg viewBox="0 0 40 40" width="28" height="28">
+                  <rect x="2" y="2" width="36" height="36" rx="7"
+                    fill={item === 'wind' ? '#c8e8ff' : 'white'}
+                    stroke={item === 'wind' ? '#4a8fba' : '#ccc'}
+                    strokeWidth="2"
+                  />
+                  {item === 'wind'
+                    ? <text x="20" y="27" textAnchor="middle" fontSize="16">💨</text>
+                    : PIPS[face].map(([cx, cy], i) => (
+                        <circle key={i} cx={cx * 0.4} cy={cy * 0.4} r="3" fill="#333" />
+                      ))
+                  }
+                </svg>
+              </span>
+              <span className="dice-guide-sentence">{sentence}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
       <div className="rules-hint">
         <span>💡 주사위 6: <strong>바람이 불면 외투(코트)부터 날아가요!</strong></span>
         <span> · <strong>외투는 스웨터 위에만 입을 수 있어요.</strong></span>

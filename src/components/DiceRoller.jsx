@@ -31,8 +31,12 @@ export default function DiceRoller({ onRoll, disabled, neededFaces = [] }) {
       ticks++;
       if (ticks >= total) {
         clearInterval(intervalRef.current);
+        // face 6(바람)은 항상 1/6 확률 보장
+        // 나머지 5/6은 neededFaces로 바이어스
         let result;
-        if (neededFaces.length > 0 && Math.random() < 0.95) {
+        if (Math.random() < 1 / 6) {
+          result = 6;
+        } else if (neededFaces.length > 0) {
           result = neededFaces[Math.floor(Math.random() * neededFaces.length)];
         } else {
           result = Math.floor(Math.random() * 6) + 1;

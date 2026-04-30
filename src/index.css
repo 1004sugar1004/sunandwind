@@ -554,6 +554,50 @@ button { cursor: pointer; border: none; font-family: inherit; }
 }
 .dice-label { font-size: 13px; font-weight: 700; color: var(--text-light); }
 
+/* ── Dice guide ────────────────────────────── */
+.dice-guide {
+  background: white;
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  box-shadow: var(--shadow);
+}
+.dice-guide-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-light);
+  margin-bottom: 8px;
+}
+.dice-guide-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.dice-guide-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 8px;
+  border-radius: 8px;
+  background: #f9f9f9;
+}
+.dice-guide-row.wind-row {
+  background: #edf6ff;
+}
+.dice-guide-face {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+.dice-guide-sentence {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+}
+.dice-guide-row.wind-row .dice-guide-sentence {
+  color: #1a6a9a;
+  font-weight: 700;
+}
+
 .rules-hint {
   background: rgba(255,255,255,0.7);
   border-radius: 10px;
